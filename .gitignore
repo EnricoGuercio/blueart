@@ -24,6 +24,11 @@
 .DS_Store
 *.pem
 
+# backup grezzo di immagini del sito live del cliente, non referenziato da
+# nessuna pagina — include foto sostituite per diritti/brand di terzi (es.
+# gallery-img3288.jpg, vedi PROJECT.md), non va pubblicato
+/public/images/live/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
