@@ -44,3 +44,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Pannello di redazione PHP: dati e file del cliente / credenziali, mai nel
+# repository (stanno solo sul server; vedi PROJECT.md)
+/php-app/data/*
+!/php-app/data/.htaccess
+!/php-app/data/.gitkeep
+/php-app/uploads/*/*
+!/php-app/uploads/*/.gitkeep

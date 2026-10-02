@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "build:aruba": "next build && node scripts/add-php.mjs && node scripts/build-shell.mjs && node scripts/prune-for-php.mjs"
   },
   "dependencies": {
     "next": "16.3.2",

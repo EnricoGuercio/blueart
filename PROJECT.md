@@ -21,7 +21,7 @@ dal sito live invece che dalla vecchia demo `blueart-website/`.
 
 **Cosa è stato riutilizzato dal lavoro precedente** (non si è ripartiti da zero): struttura
 progetto Next.js + export statico, `components/SiteImage.tsx` (WebP+JPEG fallback), pipeline di
-ottimizzazione immagini (Pillow/sips), `components/ContactForm.tsx` + `public/php/send.php`
+ottimizzazione immagini (Pillow/sips), `components/ContactForm.tsx` + `php-app/php/send.php`
 (semplificati per i soli campi Nome/Email/Messaggio del form live, invece di Nome/Email/Telefono/
 Tipo richiesta), font Raleway self-hosted, `next.config.ts` con `output: "export"`, `robots.txt`.
 Non riutilizzato: `components/PortfolioGrid.tsx` (modal a gruppi, non più pertinente al formato
@@ -226,3 +226,43 @@ i link social. Quello che resta:
   resize/WebP) resta la stessa delle sessioni precedenti.
 - `IMG_3146.jpg`, se mai autorizzata in futuro, va ruotata di 180° prima dell'uso (non ha tag EXIF
   di orientamento) — invariato dalle note precedenti.
+
+
+## Pannello di redazione per Eventi e Blog (PHP)
+
+Eventi e Blog non sono più pagine statiche Next sull'hosting finale: sono script PHP che leggono
+`data/events.json` e `data/blog.json`, modificabili dal cliente da `/pannello-redazione/`. Il resto
+del sito (Home, Chi siamo, Servizi, Privacy, Cookie) resta Next statico.
+
+**Build per Aruba**: `npm run build:aruba` (build + copia di `php-app/` in `out/` + estrazione del "guscio" +
+rimozione di `out/blog` e `out/eventi` statici). Il codice PHP sta in `php-app/`, NON in `public/`, così non finisce mai
+nella demo statica. Il normale `npm run build` (GitHub Pages) tiene le versioni statiche di Eventi/Blog
+per la demo, lette dagli stessi JSON (`content/*.json`, unica fonte dei contenuti iniziali).
+
+**Come funziona**
+- `scripts/build-shell.mjs` copia da `out/index.html` CSS, font, header e footer in `out/inc/shell-*.html`:
+  le pagine PHP li includono, quindi hanno lo stesso aspetto e lo stesso menu `<details>` del resto del sito.
+  Verificato: il markup di `<main>` di Eventi/Blog PHP è identico a quello di Next (confronto automatico).
+- Contenuti iniziali in `seed/` (si sovrascrive a ogni deploy); le modifiche del cliente vanno in `data/`
+  e `uploads/` (mai nel pacchetto: un nuovo caricamento FTP non le cancella — non sovrascrivere `data/` e `uploads/`).
+- `.htaccess` (root) riscrive `/blog/`, `/blog/<slug>/`, `/eventi/` verso `blog.php`/`eventi.php`.
+- `php-app/inc/bootstrap.php` ha anche una copia minima di team e servizi (`site_team()`, `site_services()`):
+  se cambiano in `lib/data.ts` vanno aggiornati anche lì.
+
+**Prima configurazione (obbligatoria)**: la password non è nel repository. Da una macchina con PHP:
+`php php-app/pannello-redazione/imposta-password.php [utente]` crea `data/admin.php` (solo hash) da caricare
+in `data/` sul server. Senza quel file nessuno può entrare. Dal pannello si può poi cambiare password.
+
+**Sicurezza**: password con `password_hash`; sessione con cookie `HttpOnly`/`SameSite=Lax`/`Secure` (in HTTPS),
+timeout 30 min di inattività e 8 h assolute; CSRF su ogni form; blocco 15 min dopo 5 login falliti; escape di
+ogni contenuto in output; upload validati dal contenuto (non dall'estensione), solo JPG/PNG/WebP, max 8 MB,
+ricodificati e ridimensionati con GD se presente; `uploads/` senza esecuzione di codice; `data/`, `seed/`, `inc/`
+non accessibili dal web; header `X-Robots-Tag: noindex` e CSP restrittiva sul pannello. Il percorso del pannello
+NON è in `robots.txt` apposta (lo renderebbe pubblico): oggi `Disallow: /` copre tutto il sito; quando il sito
+verrà aperto ai motori di ricerca, restano `noindex` e `X-Robots-Tag` a escluderlo.
+
+**Non verificato su Aruba reale** (stesso discorso di `send.php`): versione PHP/estensioni (testato su PHP 8.5
+locale; il codice usa solo funzioni di base, serve PHP ≥ 7.4, GD/fileinfo/exif opzionali), che `AllowOverride`
+permetta `Options` e le direttive di `.htaccess`, permessi di scrittura su `data/` e `uploads/`.
+Il pannello non gira su GitHub Pages (niente PHP): si mostra in locale con
+`php -S localhost:8000 -t out scripts/dev-router.php` dopo `npm run build:aruba`.

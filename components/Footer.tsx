@@ -39,8 +39,8 @@ export default function Footer() {
           <nav className="flex flex-col gap-2 text-sm text-[var(--color-fg-muted)]">
             <Link href="/chi-siamo/" className="hover:text-[var(--color-fg)]">Chi Siamo</Link>
             <Link href="/servizi/" className="hover:text-[var(--color-fg)]">Servizi</Link>
-            <Link href="/eventi/" className="hover:text-[var(--color-fg)]">Eventi</Link>
-            <Link href="/blog/" className="hover:text-[var(--color-fg)]">Blog</Link>
+            <a href={`${basePath}/eventi/`} className="hover:text-[var(--color-fg)]">Eventi</a>
+            <a href={`${basePath}/blog/`} className="hover:text-[var(--color-fg)]">Blog</a>
             <Link href="/#contatti" className="hover:text-[var(--color-fg)]">Contatti</Link>
           </nav>
         </div>

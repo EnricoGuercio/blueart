@@ -8,13 +8,31 @@ import { useRef } from "react";
 // versione di Next (solo next/link lo fa) — vedi next.config.ts.
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
+// Eventi e Blog sono pagine PHP su Aruba (contenuti modificabili dal pannello
+// di redazione), non rotte Next: link normali con navigazione completa, mai
+// <Link> (che proverebbe a caricare il payload RSC, inesistente per il PHP).
 const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/chi-siamo/", label: "Chi Siamo" },
-  { href: "/servizi/", label: "Servizi" },
-  { href: "/eventi/", label: "Eventi" },
-  { href: "/blog/", label: "Blog" },
+  { href: "/", label: "Home", hard: false },
+  { href: "/chi-siamo/", label: "Chi Siamo", hard: false },
+  { href: "/servizi/", label: "Servizi", hard: false },
+  { href: "/eventi/", label: "Eventi", hard: true },
+  { href: "/blog/", label: "Blog", hard: true },
 ];
+
+function NavItem({ link, className, onClick }: { link: (typeof navLinks)[number]; className: string; onClick?: () => void }) {
+  if (link.hard) {
+    return (
+      <a href={`${basePath}${link.href}`} className={className} onClick={onClick}>
+        {link.label}
+      </a>
+    );
+  }
+  return (
+    <Link href={link.href} className={className} onClick={onClick}>
+      {link.label}
+    </Link>
+  );
+}
 
 export default function Header() {
   const detailsRef = useRef<HTMLDetailsElement>(null);
@@ -48,13 +66,11 @@ export default function Header() {
 
         <nav className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <Link
+            <NavItem
               key={link.href}
-              href={link.href}
+              link={link}
               className="link-underline text-sm font-medium text-[var(--color-fg-muted)] hover:text-[var(--color-fg)] transition-colors"
-            >
-              {link.label}
-            </Link>
+            />
           ))}
         </nav>
 
@@ -78,14 +94,12 @@ export default function Header() {
 
           <nav className="absolute right-0 top-full mt-3 w-[calc(100vw-3rem)] max-w-xs border border-[var(--color-border)] rounded-2xl shadow-lg px-6 py-4 flex flex-col gap-4 bg-[var(--color-bg-card)]">
             {navLinks.map((link) => (
-              <Link
+              <NavItem
                 key={link.href}
-                href={link.href}
+                link={link}
                 className="text-base font-medium text-[var(--color-fg-muted)] hover:text-[var(--color-fg)]"
                 onClick={closeMenu}
-              >
-                {link.label}
-              </Link>
+              />
             ))}
           </nav>
         </details>

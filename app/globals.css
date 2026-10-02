@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+/* Le pagine PHP (Eventi, Blog, pannello di redazione) usano classi Tailwind:
+   Tailwind le deve vedere per includerle nel CSS compilato, che le pagine PHP
+   condividono con il resto del sito. */
+@source "../php-app/blog.php";
+@source "../php-app/eventi.php";
+@source "../php-app/pannello-redazione";
+@source "../php-app/inc/bootstrap.php";
+
 /* I 4 @font-face di Raleway non stanno più qui: usano un percorso assoluto
    "/fonts/..." che un CSS statico non può far dipendere dal basePath di
    build (GitHub Pages di progetto vs dominio Aruba). Sono renderizzati come

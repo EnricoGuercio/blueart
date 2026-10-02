@@ -1,0 +1,10 @@
+# Apache (hosting condiviso Aruba). Non verificato su hosting reale: vedi PROJECT.md.
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Blog ed Eventi sono pagine PHP che leggono data/*.json
+  RewriteRule ^blog/?$ blog.php [L,QSA]
+  RewriteRule ^blog/([a-z0-9-]+)/?$ blog.php?slug=$1 [L,QSA]
+  RewriteRule ^eventi/?$ eventi.php [L,QSA]
+</IfModule>
