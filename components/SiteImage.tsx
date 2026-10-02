@@ -9,9 +9,10 @@ type Props = {
   className?: string;
   sizes?: string;
   loading?: "lazy" | "eager";
+  style?: React.CSSProperties;
 };
 
-export default function SiteImage({ slug, alt, className, sizes, loading = "lazy" }: Props) {
+export default function SiteImage({ slug, alt, className, sizes, loading = "lazy", style }: Props) {
   return (
     <picture>
       <source srcSet={`${basePath}/images/${slug}.webp`} type="image/webp" />
@@ -22,6 +23,7 @@ export default function SiteImage({ slug, alt, className, sizes, loading = "lazy
         decoding="async"
         className={className}
         sizes={sizes}
+        style={style}
       />
     </picture>
   );

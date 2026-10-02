@@ -1,7 +1,13 @@
 import Link from "next/link";
+import Image from "next/image";
 import SiteImage from "@/components/SiteImage";
+import HeroSlideshow from "@/components/HeroSlideshow";
 import ContactForm from "@/components/ContactForm";
 import { homeServiceTeasers, testimonials, gallery, companyInfo, heroKeywords } from "@/lib/data";
+
+// Vedi next.config.ts / SiteImage.tsx: percorso assoluto non riscritto dal
+// basePath di build (solo next/link lo è).
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
 export default function Home() {
   return (
@@ -9,14 +15,21 @@ export default function Home() {
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
-          <SiteImage
-            slug="trio-jazz-dallalto"
-            alt=""
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30" />
+          <HeroSlideshow />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/65 to-black/50" />
         </div>
-        <div className="container relative py-28 md:py-40 text-center text-white">
+        {/* Glifo come filigrana, non il logo per intero: un dettaglio di
+            brand ricorrente invece di un riquadro vuoto — vedi punto "meno
+            da template". */}
+        <Image
+          src={`${basePath}/logo/glifo-blueart-bianco.png`}
+          alt=""
+          aria-hidden="true"
+          width={168}
+          height={228}
+          className="glyph-mark hidden md:block top-1/2 -translate-y-1/2 right-[-4rem] h-[140%] w-auto"
+        />
+        <div className="container relative py-28 md:py-40 text-center text-white [text-shadow:0_2px_18px_rgba(0,0,0,0.6)]">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight max-w-3xl mx-auto">
             Servizi con e per artisti
           </h1>

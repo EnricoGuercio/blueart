@@ -25,15 +25,25 @@ export default function Header() {
 
   return (
     <header
-      className="sticky top-0 z-50 border-b border-[var(--color-border)] bg-white/90 backdrop-blur"
+      className="sticky top-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-bg)]/90 backdrop-blur"
       style={{ paddingTop: "env(safe-area-inset-top)" }}
     >
       <div className="container flex items-center justify-between py-3">
-        <Link href="/" className="flex items-center gap-2" onClick={closeMenu}>
-          <Image src={`${basePath}/logo/logo-blueart-nero-bordo-bianco.png`} alt="BlueArt" width={44} height={44} priority className="rounded-full" />
-          <span className="text-lg font-semibold">
-            Blue<span className="text-[var(--color-accent)]">Art</span>
-          </span>
+        {/* Logo a piena proporzione (433×238), non più forzato in un
+            riquadro 44×44 e ritagliato in cerchio: quel crop tagliava via
+            la scritta "BlueArt", lasciando visibile solo un frammento del
+            glifo — vedi punto "logo più visibile". Variante bianca, pensata
+            apposta per sfondo scuro (invisibile su sfondo chiaro, per questo
+            non era in uso finora). */}
+        <Link href="/" className="flex items-center" onClick={closeMenu}>
+          <Image
+            src={`${basePath}/logo/logo-blueart-bianco.png`}
+            alt="BlueArt"
+            width={433}
+            height={238}
+            priority
+            className="h-10 md:h-11 w-auto"
+          />
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
@@ -66,7 +76,7 @@ export default function Header() {
             </span>
           </summary>
 
-          <nav className="absolute right-0 top-full mt-3 w-[calc(100vw-3rem)] max-w-xs border border-[var(--color-border)] rounded-2xl shadow-lg px-6 py-4 flex flex-col gap-4 bg-white">
+          <nav className="absolute right-0 top-full mt-3 w-[calc(100vw-3rem)] max-w-xs border border-[var(--color-border)] rounded-2xl shadow-lg px-6 py-4 flex flex-col gap-4 bg-[var(--color-bg-card)]">
             {navLinks.map((link) => (
               <Link
                 key={link.href}

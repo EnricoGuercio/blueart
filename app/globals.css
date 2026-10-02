@@ -6,18 +6,30 @@
    <style> inline in app/layout.tsx, dove il basePath può essere interpolato
    a build time — vedi lì. */
 
+/* Tema scuro — palette ripresa e adattata dalla direzione grafica originale
+   del progetto (pre-pivot, vedi materiali/contesto/recap-completo.md §5/§11
+   e il prototipo in blueart-website/css/style.css), poi riverificata punto
+   per punto con calcolo del contrasto WCAG: ogni combinazione testo/sfondo
+   qui sotto è ≥4.5:1 (AA testo normale), gli accenti "bright" superano 8:1.
+   --color-accent-deep è il blu esatto campionato dal pixel del logo
+   (#2a3faa) — usato per sfondi pieni (bottoni), non per testo su sfondo
+   scuro: con 2.25:1 è sotto soglia AA per il testo, ma è ampiamente sopra
+   8:1 con testo bianco sopra di sé. --color-accent è una variante più
+   chiara dello stesso blu, pensata apposta per link/eyebrow leggibili
+   direttamente sullo sfondo scuro. */
 :root {
-  --color-bg: #ffffff;
-  --color-bg-raised: #f6f6fb;
-  --color-bg-card: #ffffff;
-  --color-border: rgba(20, 20, 40, 0.09);
-  --color-border-strong: rgba(20, 20, 40, 0.16);
-  --color-fg: #17172a;
-  --color-fg-muted: #52526b;
-  --color-fg-faint: #8888a0;
-  --color-accent: #5b4fe5;
-  --color-accent-bright: #7466ff;
-  --color-accent-soft: rgba(91, 79, 229, 0.1);
+  --color-bg: #06070b;
+  --color-bg-raised: #0d1018;
+  --color-bg-card: #10131c;
+  --color-border: rgba(255, 255, 255, 0.09);
+  --color-border-strong: rgba(255, 255, 255, 0.18);
+  --color-fg: #f2f4f8;
+  --color-fg-muted: #a7afc0;
+  --color-fg-faint: #707a90;
+  --color-accent: #5b76e8;
+  --color-accent-bright: #6ea8fe;
+  --color-accent-deep: #2a3faa;
+  --color-accent-soft: rgba(91, 118, 232, 0.14);
 }
 
 @theme inline {
@@ -32,6 +44,7 @@
 
 html {
   scroll-behavior: smooth;
+  color-scheme: dark;
 }
 
 body {
@@ -39,6 +52,27 @@ body {
   color: var(--color-fg);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+/* Texture di sfondo distintiva: una grigliatura di linee sottilissime più un
+   bagliore radiale smorzato dietro l'header, ispirata al prototipo
+   pre-pivot (stesso principio, valori riadattati). Fissa (non scrolla),
+   dietro a tutto il contenuto, pensata per non competere mai con foto o
+   testo — risolve il punto "meno da template" senza toccare la struttura
+   delle pagine. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    radial-gradient(ellipse 1200px 600px at 50% -10%, var(--color-accent-soft), transparent 60%),
+    var(--color-bg);
+  background-size: 120px 120px, 120px 120px, 100% 100%, auto;
 }
 
 .container {
@@ -56,10 +90,20 @@ body {
 
 .eyebrow {
   font-size: 0.75rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--color-accent);
   font-weight: 600;
+}
+
+/* Titoli con più carattere: letter-spacing leggermente negativo per un
+   effetto più "da brand" che da tema standard, vedi punto "meno da
+   template". Applicata via @layer così resta sovrascrivibile dalle utility
+   Tailwind già in uso (text-3xl ecc.) senza doverle toccare una per una. */
+@layer base {
+  h1, h2, h3 {
+    letter-spacing: -0.02em;
+  }
 }
 
 .btn {
@@ -72,40 +116,56 @@ body {
   font-weight: 600;
   font-size: 0.95rem;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
   border: 1px solid transparent;
   cursor: pointer;
 }
 
 .btn-primary {
-  background: var(--color-accent);
+  background: var(--color-accent-deep);
   color: #fff;
+  box-shadow: 0 0 0 0 rgba(110, 168, 254, 0);
 }
 .btn-primary:hover {
   background: var(--color-accent-bright);
+  color: #06070b;
   transform: translateY(-1px);
+  box-shadow: 0 8px 24px -6px rgba(110, 168, 254, 0.55);
 }
 
 .btn-secondary {
-  background: #fff;
+  background: var(--color-bg-card);
   color: var(--color-fg);
   border-color: var(--color-border-strong);
 }
 .btn-secondary:hover {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
+  border-color: var(--color-accent-bright);
+  color: var(--color-accent-bright);
 }
 
 .card {
   background: var(--color-bg-card);
   border: 1px solid var(--color-border);
   border-radius: 1rem;
-  box-shadow: 0 1px 2px rgba(20, 20, 40, 0.04);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 .card:hover {
-  border-color: var(--color-border-strong);
-  box-shadow: 0 8px 24px rgba(20, 20, 40, 0.08);
+  border-color: var(--color-accent-deep);
+  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.55), 0 0 0 1px var(--color-accent-soft);
+  transform: translateY(-2px);
+}
+
+/* Glifo BlueArt come filigrana decorativa: un elemento ricorrente ispirato
+   al logo (non il logo stesso, solo il tratto), molto tenue, dietro al
+   contenuto. Pensato per sezioni ampie (hero, chiusura pagina) — vedi punto
+   "meno da template". Chi lo usa imposta position:relative sul contenitore. */
+.glyph-mark {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  user-select: none;
 }
 
 .link-underline {
@@ -125,3 +185,29 @@ body {
 .link-underline:hover::after {
   width: 100%;
 }
+
+/* Hero Ken Burns: 4 foto, 7s ciascuna (ciclo 28s), solo CSS. Ogni slide ha
+   un ritardo sfalsato di 7s; dissolvenza ~1.3s sovrapposta alla successiva e
+   zoom lento 1 → 1.12 mentre è visibile. La prima parte con ritardo
+   negativo, così al primo paint è già visibile invece di partire da nero. */
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: hero-kenburns 28s linear infinite;
+}
+@keyframes hero-kenburns {
+  0% { opacity: 0; transform: scale(1); }
+  4.6% { opacity: 1; }
+  25% { opacity: 1; }
+  29.6% { opacity: 0; transform: scale(1.12); }
+  100% { opacity: 0; transform: scale(1.12); }
+}
+/* Accessibilità: con "riduci movimento" a livello di sistema niente
+   animazione, resta ferma solo la prima foto. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide { animation: none; opacity: 0; transform: none; }
+  .hero-slide:first-child { opacity: 1; }
+}
+.hero-slide picture { display: block; width: 100%; height: 100%; }

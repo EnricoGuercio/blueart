@@ -74,7 +74,7 @@ export default function ContactForm() {
           name="name"
           type="text"
           required
-          className="w-full rounded-lg border border-[var(--color-border-strong)] bg-white px-4 py-2.5 text-sm outline-none focus:border-[var(--color-accent)]"
+          className="w-full rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-bg-raised)] px-4 py-2.5 text-sm text-[var(--color-fg)] outline-none focus:border-[var(--color-accent-bright)]"
         />
       </div>
 
@@ -87,7 +87,7 @@ export default function ContactForm() {
           name="email"
           type="email"
           required
-          className="w-full rounded-lg border border-[var(--color-border-strong)] bg-white px-4 py-2.5 text-sm outline-none focus:border-[var(--color-accent)]"
+          className="w-full rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-bg-raised)] px-4 py-2.5 text-sm text-[var(--color-fg)] outline-none focus:border-[var(--color-accent-bright)]"
         />
       </div>
 
@@ -100,7 +100,7 @@ export default function ContactForm() {
           name="message"
           required
           rows={5}
-          className="w-full rounded-lg border border-[var(--color-border-strong)] bg-white px-4 py-2.5 text-sm outline-none focus:border-[var(--color-accent)]"
+          className="w-full rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-bg-raised)] px-4 py-2.5 text-sm text-[var(--color-fg)] outline-none focus:border-[var(--color-accent-bright)]"
         />
       </div>
 
@@ -109,9 +109,9 @@ export default function ContactForm() {
       </button>
 
       {status === "success" && (
-        <p className="text-sm text-emerald-600">Messaggio inviato correttamente.</p>
+        <p className="text-sm text-emerald-400">Messaggio inviato correttamente.</p>
       )}
-      {status === "error" && <p className="text-sm text-red-600">{errorMessage}</p>}
+      {status === "error" && <p className="text-sm text-red-400">{errorMessage}</p>}
     </form>
   );
 }

@@ -1,10 +1,21 @@
 import Link from "next/link";
+import Image from "next/image";
 import { companyInfo } from "@/lib/data";
+
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-[var(--color-border)] mt-24 bg-[var(--color-bg-raised)]">
-      <div className="container py-14 grid gap-10 md:grid-cols-[1.2fr_1fr_1fr]">
+    <footer className="relative overflow-hidden border-t border-[var(--color-border)] mt-24 bg-[var(--color-bg-raised)]">
+      <Image
+        src={`${basePath}/logo/glifo-blueart-bianco.png`}
+        alt=""
+        aria-hidden="true"
+        width={168}
+        height={228}
+        className="glyph-mark hidden sm:block bottom-[-3rem] right-[-2rem] h-[220%] w-auto"
+      />
+      <div className="container relative py-14 grid gap-10 md:grid-cols-[1.2fr_1fr_1fr]">
         <div>
           <p className="text-lg font-semibold">
             Blue<span className="text-[var(--color-accent)]">Art</span>
